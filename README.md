@@ -19,10 +19,11 @@ https://unstop.com/hackathons/codecure-ai-hackathon-spirit26-iit-bhu-1624607
 - [API (Main Endpoints)](#api-main-endpoints)
 - [Project Structure](#project-structure)
 - [Demo Checklist (3 minutes)](#demo-checklist-3-minutes)
+- [Future Enhancements](#future-enhancements)
 - [Disclaimer](#disclaimer)
 
 <details>
-<summary><b>Demo assets (optional)</b></summary>
+<summary><b>Demo assets</b></summary>
 
 - Demo video: _add link_
 - Slides / pitch deck: _add link_
@@ -42,8 +43,7 @@ Water-related risks show up as multiple weak signals before they become a crisis
 - **ML:** LightGBM, scikit-learn
 - **Data:** pandas, numpy
 - **Visuals:** Leaflet, Chart.js, Plotly
-- **Optional dashboards:** Streamlit + Folium
-- **Optional integrations:** Gemini (server-side proxy), Telegram digest
+- **Frontend:** HTML, CSS, JavaScript
 
 ---
 
@@ -80,32 +80,20 @@ Open:
 
 Note: Python 3.11+ is recommended for best compatibility with ML wheels.
 
-<details>
-<summary><b>Optional: run the Streamlit dashboard</b></summary>
-
-```powershell
-\.\.venv\Scripts\python -m streamlit run app\streamlit_app.py
-```
-
-</details>
-
 ---
 
 ## Technical Workflow
 
-### End-to-end pipeline
+PlantUML source: [docs/technical-workflow.puml](docs/technical-workflow.puml)
 
-```mermaid
-flowchart LR
-    A[Demo data generator<br/>data/*.csv] --> B[Feature engineering<br/>features/weather_lags.py
-features/spectral_indices.py]
-    B --> C[Model training<br/>models/train_models.py]
-    C --> D[Pickles saved<br/>models/*_models.pkl]
-    D --> E[Flask loads models + CSVs<br/>app/server.py::_load]
-    E --> F[Risk computation + TTL cache<br/>_compute_risks_cached]
-    F --> G[API JSON responses<br/>/api/*]
-    G --> H[Frontend dashboard<br/>frontend/index.html + app.js]
-```
+Workflow PDF: [docs/alggg_wprkflow.pdf](docs/alggg_wprkflow.pdf)
+
+### End-to-end pipeline (high level)
+
+1) Generate or load demo CSVs
+2) Train/load LightGBM models (first run only)
+3) Compute per-lake multi-signal risk (cached)
+4) Serve JSON APIs to the frontend dashboard
 
 ### Runtime behavior (important for judges)
 
@@ -130,19 +118,6 @@ features/spectral_indices.py]
   - `GET /api/sewage`
   - `GET /api/sewage/alerts`
   - `GET /api/sewage/timeline/<lake_id>`
-- Optional integrations
-  - `POST /api/ai` (requires `GEMINI_API_KEY`)
-  - Telegram: `/api/telegram/*` (requires `TELEGRAM_BOT_TOKEN`)
-
-<details>
-<summary><b>Optional configuration (env vars)</b></summary>
-
-```powershell
-$env:GEMINI_API_KEY = "YOUR_KEY_HERE"         # enables POST /api/ai
-$env:TELEGRAM_BOT_TOKEN = "YOUR_TOKEN_HERE"   # enables Telegram digest + subscribe endpoints
-```
-
-</details>
 
 ---
 
@@ -152,7 +127,6 @@ $env:TELEGRAM_BOT_TOKEN = "YOUR_TOKEN_HERE"   # enables Telegram digest + subscr
 aquarisk/
   app/
     server.py              # Flask API + serves /frontend
-    streamlit_app.py       # Optional Streamlit dashboard
   data/                    # Demo CSVs + lake metadata
   features/                # Feature engineering utilities
   models/                  # Training + saved model pickles
@@ -175,6 +149,14 @@ aquarisk/
 </details>
 
 ---
+
+## Future Enhancements
+
+- Replace demo CSVs with real ingestion (satellite/weather APIs, lab uploads, STP telemetry)
+- Add scheduled batch scoring + persistent store (instead of in-process caching)
+- Add uncertainty estimates + calibration using ground-truth incidents
+- Add RBAC + audit logging for operational teams
+- Add automated alerting workflows (SMS/WhatsApp/Email) and escalation policies
 
 ## Disclaimer
 
