@@ -88,7 +88,9 @@ PlantUML source: [docs/technical-workflow.puml](docs/technical-workflow.puml)
 
 Workflow diagram:
 
-![Technical workflow](docs/technical-workflow.png)
+[Open image](docs/technical-workflow.png)
+
+<img src="docs/technical-workflow.png" alt="Technical workflow" width="720" />
 
 ### End-to-end pipeline (high level)
 
