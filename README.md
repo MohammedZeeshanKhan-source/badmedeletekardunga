@@ -86,7 +86,9 @@ Note: Python 3.11+ is recommended for best compatibility with ML wheels.
 
 PlantUML source: [docs/technical-workflow.puml](docs/technical-workflow.puml)
 
-Workflow PDF: [docs/alggg_wprkflow.pdf](docs/alggg_wprkflow.pdf)
+Workflow diagram:
+
+![Technical workflow](docs/technical-workflow.png)
 
 ### End-to-end pipeline (high level)
 
